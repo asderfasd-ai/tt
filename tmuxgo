@@ -1,0 +1,6 @@
+tmux new-session -As cosrin \; \
+  split-window -v -p 50 \; \
+  split-window -v -p 50 \; \
+  split-window -v -p 50 \; \
+  select-layout even-vertical \; \
+  attach-session   
