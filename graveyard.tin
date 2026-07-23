@@ -1,0 +1,59 @@
+#ALIAS fight_next {
+    #math {fight_idx} {$fight_idx +1};
+    #if {$fight_idx <= 12}
+    {
+    attack;
+    #delay {$time} attack;
+    }
+        
+}
+
+#ALIAS cast_next {
+    #math {fight_idx} {$cast_idx +1};
+    #if {$cast_idx <= 12}
+    {
+    dmg;
+    }
+}
+
+#switch $stage {
+    #case fighter} {
+    n;e;
+    #var fight_idx 0;
+    fight_next;
+}
+    #case berserker} {
+    #if {"$stage" == "fighter"} {
+    n;e;
+    #var cast_idx 0;
+    cast_next;
+    }
+}
+    #case necromancer} {
+    #if {"$stage" == "berserker"} {
+    ;nw;sw;s;ne;
+    #var cast_idx 0;
+    cast_next;
+    }
+}
+    #case bowman} {
+    #if {"$stage" == "necromancer"} {
+    e;ne;nw;n
+    #var cast_idx 0;
+    cast_next;
+    }
+}
+    #case spiked} {
+    #if {"$stage" == "bowman"} {
+    ;e;e;ne;se;
+    #var cast_idx 0;
+    cast_next;
+    }
+}
+    #case chariot} {
+    #if {"$stage" == "spiked"
+    sw;ne;nw;n;n;
+    #var cast_idx 0;
+    cast_next;
+    }
+}

@@ -1,0 +1,549 @@
+#session {Kuziqudiq} {play.cosrintwo.com} {31000};Kuziqudiq;Garro
+#log timestamp {%a %I:%M%p}
+#READ tt/hooks.tin
+#var charname Kuziqudiq
+#EVENT {SESSION CONNECTED} {#if {"$charname" == "Kuziqudiq"} {#read comms.tin}} 
+#ACTION {Kuziqudiq begins moving with blinding speed.}
+{
+    rt 1.5;
+    #showme <fca> Roundtime set to <cfa>1.5
+}
+
+#ACTION {Kuziqudiq's hastened movements return to normal speed}
+{
+    rt 3.5;
+    #showme <fca> Roundtime set to <cfa>3.5
+}
+
+#ACTION {^%0 tells %1 '%2'}
+{
+    #line log tt/comms.log {<fca> $charname caught<129> %0<079> tells %1 '%2'}
+}
+
+#ACTION {^%0 says '%1 '}
+{
+    #if {"%0" == "$charname"} {#return} {#line log tt/comms.log {<fca> $charname caught<129> %0 says<079> '%1 '}};
+}
+
+#ALIAS {...}
+{
+    nn;
+    unpack paste;
+    eat paste;
+    #delay 3 {p paste}
+}
+
+#ALIAS {/}
+{
+    recall
+}
+
+#ALIAS {00}
+{
+    rr lure
+}
+
+#ALIAS {000}
+{
+    #3 00
+}
+
+#ALIAS {a1}
+{
+    cast antidote;
+    #delay {$time} {target %1}
+}
+
+#ALIAS {aa}
+{
+    #alias {%1} {%2}
+}
+
+#ALIAS {bb}
+{
+    lurk
+}
+
+#ALIAS {buff}
+{
+    hasteme;
+    colorme
+}
+
+#ALIAS {c}
+{
+    cast
+}
+
+#ALIAS {cast_next_color}
+{
+    #math {colors_idx} {$colors_idx + 1};
+    #if {$colors_idx <= 3}
+    {
+        cast $colors[$colors_idx];
+        #delay {$time} {target $targ;cast_next_color}
+    };
+    #else
+    {
+        #delay {$time+1} {#show \n<acf>Finished casting all colors.<079>}
+    }
+}
+
+#ALIAS {cast_next_resist}
+{
+    #math {resists_idx} {$resists_idx + 1};
+    #if {$resists_idx <= 5}
+    {
+        cast $resists[$resists_idx];
+        #delay {$time} {target $targ;cast_next_resist}
+    };
+    #else
+    {
+        #delay {$time+1} {#show \n<acf>Finished casting all resists.<079>}
+    }
+}
+
+#ALIAS {cc}
+{
+    clean
+}
+
+#ALIAS {ch}
+{
+    target %1;
+    cast chill
+}
+
+#ALIAS {colorme}
+{
+    tell lana buff me up
+}
+
+#ALIAS {colors}
+{
+    #variable {colors_idx} {0};
+    #unvariable targ;
+    #variable {targ} {%1};
+    cast_next_color
+}
+
+#ALIAS {dd}
+{
+    c light shards;
+    #delay {$time} {target %1}
+}
+
+#ALIAS {dest}
+{
+    #variable dest %1
+}
+
+#ALIAS {dmg}
+{
+    tt;
+    #nop c $dmg[@rnd{1;3}];
+    #switch {"$dmgtype"}
+    {
+        #case {"fireflames"}
+        {
+            c fireflames
+        };
+        #case {"chill"}
+        {
+            c chill
+        };
+        #case {"rand"}
+        {
+            $dmg[@rnd{1;3}]
+        };
+        #default
+        {
+            c zap
+        }
+    }
+}
+
+#ALIAS {dmgtype}
+{
+    #variable dmgtype {%0}
+}
+
+#ALIAS {ee}
+{
+    c eagle eye;
+    #delay {$time} {target %1}
+}
+
+#ALIAS {es}
+{
+    target %1;
+    c ensnare
+}
+
+#ALIAS {f}
+{
+    target %1;
+    c fireflames
+}
+
+#ALIAS {farm}
+{
+    nn;
+    mm;
+    rr $dest
+}
+
+#ALIAS {fb}
+{
+    rr buffs;
+    #delay {5} {hasteme;colorme}
+}
+
+#ALIAS {ff}
+{
+    nn;
+    mm;
+    rr farm
+}
+
+#ALIAS {gc}
+{
+    #5 get crossbow
+}
+
+#ALIAS {gg}
+{
+    #2 get bow;
+    #2 get crossbow;
+    #2 get gem;
+    get strongbox;
+    get chest;
+    get gold
+}
+
+#ALIAS {hasteme}
+{
+    tell phizzel make haste
+}
+
+#ALIAS {hh}
+{
+    target %1;
+    c heal;
+    #delay {$time} {target};
+}
+
+#ALIAS {ll2}
+{
+    #if {!$occupied} {lurenew $dir1 $dir2} {#untick grind;dmg;look;grind $dir1 $dir2};
+    #elseif {$gohome} {stopgrind;#delay $time recall;#delay {4} rest;#var gohome 0};
+    #elseif {$needheal} {hh;#var needheal 0};
+
+}
+#ACTION {^%0 in!$} {#var occupied 1}
+
+#ALIAS {ll}
+{
+    #if {$occupied} {dmg;check_absence} {lure $dir1 dir2};
+    #elseif {$gohome} {stopgrind;#delay $time recall;#delay {4} rest;#var gohome 0};
+    #elseif {$needheal} {hh;#var needheal 0};
+ 
+}
+
+
+
+
+#ALIAS {lurk}
+{
+    c lurk;
+    #delay {$time} {target %1}
+}
+
+#ALIAS {nn}
+{
+    p right;
+    p left;
+}
+
+#ALIAS {mm}
+{
+    unp $weapon;
+    unp $offhand;
+}
+
+#ALIAS {pri}
+{
+ #if {"%0" == ""} {prilist};#elseif {&priority[] < 3}
+    {
+        #list priority add {%0};
+        #showme Added <cfa>%0<079> to Priority List
+    };
+}
+
+#ALIAS {priclear}
+{
+    #list priority clear;
+    #showme Priorities Cleared
+}
+
+#ALIAS {prilist}
+{
+    #showme Current priorities;
+    #foreach {$priority[%*]} {obj}
+    {
+        #showme <cfa>   $obj
+    }
+}
+
+#ALIAS {r}
+{
+    retreat
+}
+
+#ALIAS {rem}
+{
+    remove
+}
+
+#ALIAS {resists}
+{
+    #variable {resists_idx} {0};
+    #unvariable targ;
+    #variable targ {%1};
+    cast_next_resist
+}
+
+#ALIAS {rr}
+{
+    #path load %1;
+    #path run 0.1
+}
+
+#ALIAS {rt}
+{
+    #variable {time} {%1}
+}
+
+#ALIAS {ss}
+{
+    sw;
+    sw;
+    #2 sss bow;
+    #2 sss crossbow;
+    #2 sss gem;
+    #delay {1} {#2 ne}
+}
+
+#ALIAS {sss}
+{
+    #5 sell %1
+}
+
+#ALIAS {t}
+{
+    target
+}
+
+#ALIAS {tt}
+{
+    #foreach {$priority[%*]} {tar}
+    {
+        target $tar
+    };
+    target;
+}
+
+#ALIAS {uaa}
+{
+    #unalias %1
+}
+
+#ALIAS {ul}
+{
+    nn;
+    c unlock;
+    #delay {$time} {unp %1;target %1;gg;mm}
+}
+
+#ALIAS {unp}
+{
+    unpack
+}
+
+#ALIAS {uuu}
+{
+    /;
+    rr cats;
+    #delay {4} vvv
+}
+
+#ALIAS {vvv}
+{
+    hh;
+    #delay {$time} {target kuziqudiq}
+}
+
+#ALIAS {yyyyy}
+{
+    #write sorc.tin
+}
+
+#ALIAS {z}
+{
+    tt;
+    c zap
+}
+
+
+#CONFIG {AUTO TAB} {5000}
+#CONFIG {BUFFER SIZE} {10000}
+#CONFIG {CHARSET} {UTF-8}
+#CONFIG {COLOR MODE} {TRUE}
+#CONFIG {COLOR PATCH} {OFF}
+#CONFIG {COMMAND COLOR} {\e[0;37m}
+#CONFIG {COMMAND ECHO} {ON}
+#CONFIG {CONNECT RETRY} {0.0}
+#CONFIG {HISTORY SIZE} {1000}
+#CONFIG {LOG MODE} {RAW}
+#CONFIG {MOUSE} {OFF}
+#CONFIG {PACKET PATCH} {AUTO OFF}
+#CONFIG {RANDOM SEED} {3140056328}
+#CONFIG {REPEAT CHAR} {!}
+#CONFIG {REPEAT ENTER} {OFF}
+#CONFIG {SCREEN READER} {OFF}
+#CONFIG {SCROLL LOCK} {ON}
+#CONFIG {SPEEDWALK} {OFF}
+#CONFIG {TAB WIDTH} {8}
+#CONFIG {TELNET} {ON}
+#CONFIG {TINTIN CHAR} {#}
+#CONFIG {VERBATIM} {OFF}
+#CONFIG {VERBATIM CHAR} {\}
+#CONFIG {VERBOSE} {OFF}
+#CONFIG {WORDWRAP} {ON}
+
+#ticker {afk} {;} {300}
+
+#FUNCTION {rnd}
+{
+    #math {result} {1 d (%2 - %1 + 1) + %1 - 1}
+}
+
+
+#GAG {%0 is AFK for a moment...}
+#GAG {%0 is no longer AFK}
+#GAG {There is no %1 in the room}
+#GAG {There is not a %1 in the room}
+#GAG {You cannot Move while engaged.  Retreat first}
+#GAG {You have not cast a spell!}
+
+#PATHDIR {d} {u} {32}
+#PATHDIR {e} {w} {2}
+#PATHDIR {n} {s} {1}
+#PATHDIR {ne} {sw} {3}
+#PATHDIR {nw} {se} {9}
+#PATHDIR {s} {n} {4}
+#PATHDIR {se} {nw} {6}
+#PATHDIR {sw} {ne} {12}
+#PATHDIR {u} {d} {16}
+#PATHDIR {w} {e} {8}
+
+#SUBSTITUTE {(%2%1 left%3)} {(%2<cfa>%1 left<078>%3)} {5}
+
+#VARIABLE {buffs} {;{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{w}{e}{0}}
+#VARIABLE {cats} {w;w;w;w;w;w;w;w;w;w;n;n;e;n;n;d;e;se;se;s}
+#VARIABLE {charname} {Kuziqudiq}
+#VARIABLE {colors}
+{
+    {1} {eagle eye}
+    {2} {ogre strength}
+    {3} {light shards}
+}
+#VARIABLE {colors_idx} {4}
+#VARIABLE {current} {}
+#VARIABLE {currentrr} {#list {resists} {get} {4 - 1}}
+#VARIABLE {cw} {;{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{e}{w}{0};{ne}{sw}{0}}
+#VARIABLE {dest} {ff1}
+#VARIABLE {dmg}
+{
+    {1} {zap}
+    {2} {fireflames}
+    {3} {chill}
+}
+#VARIABLE {dmgtype} {chill}
+#VARIABLE {farm} {;{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{w}{e}{0};{w}{e}{0};{sw}{ne}{0};{e}{w}{0};{s}{n}{0}}
+#VARIABLE {ff1} {;{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{w}{e}{0};{w}{e}{0};{w}{e}{0};{nw}{se}{0};{ne}{sw}{0};{e}{w}{0}}
+#VARIABLE {ff2} {;{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{w}{e}{0};{w}{e}{0};{sw}{ne}{0};{s}{n}{0};{e}{w}{0};{e}{w}{0}}
+#VARIABLE {fort} {;{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{s}{n}{0};{w}{e}{0};{w}{e}{0}}
+#VARIABLE {lure} {;{n}{s}{0};{s}{n}{0};{n}{s}{0};{s}{n}{0};{n}{s}{0};{s}{n}{0};{n}{s}{0};{s}{n}{0};{n}{s}{0};{s}{n}{0};{n}{s}{0};{s}{n}{0};{n}{s}{0};{s}{n}{0};{n}{s}{0};{s}{n}{0}}
+#VARIABLE {mage} {;{w}{e}{0};{w}{e}{0};{w}{e}{0};{w}{e}{0};{w}{e}{0};{w}{e}{0};{n}{s}{0};{n}{s}{0};{n}{s}{0};{n}{s}{0};{n}{s}{0};{n}{s}{0};{n}{s}{0};{w}{e}{0};{w}{e}{0};{w}{e}{0}}
+#VARIABLE {priority} {}
+#VARIABLE {resists}
+{
+    {1} {bloodshrine}
+    {2} {flamebane}
+    {3} {aurora}
+    {4} {crystal skin}
+    {5} {freedom}
+}
+#VARIABLE {resists_idx} {6}
+#VARIABLE {sli} {s;s;s;s;s;w;w;w;w;w;s}
+#VARIABLE {time} {3.5}
+#VARIABLE {engaged} {0}
+#VARIABLE {occupied} {0}
+#VARIABLE {gohome} {0}
+#VARIABLE {grinding} {0}
+#VARIABLE {wimpy} {200}
+#VARIABLE {manawimpy} {50}
+
+#action {^Monsters in Room:} {
+  ll3;
+}
+
+#alias {///} {
+    #untick farmer;#var grinding 0;recall
+}
+#alias {//} {
+    #untick farmer;#var grinding 0
+}
+
+#action {You take %1 points of poison damage...} {a1;#delay {$time} {target $charname}}
+
+#action {^(%1/%2) [%3/%4] Command:} {#if {%1 < $wimpy} {#var needheal 1};#elseif {%3 < $manawimpy} {#var gohome 1}}
+#alias {farm} {
+    #if {!$grinding} {
+        #var grinding 1;
+        #var dir1 %1;
+        #var dir2 %2;
+        check;
+        #ticker {farmer} {lurenew} {0.6};
+    } {
+        #var {!$grinding};
+        #untick farmer;
+    }
+}
+#var {current_room} {1}
+#alias lurenew {
+    #if {!$grinding} {#return};
+    #elseif {$current_room == 1} {#var current_room 2;$dir1};
+    #else {#var {current_room} {1};$dir2}
+}
+
+#alias ll3 {
+    #if {!$grinding} {#return};
+    #else {
+    #var grinding 0;
+    #untick farmer;
+
+    #if {$needheal} {hh;#delay {$time} {check};#var needheal 0} {dmg;#delay {$time} {check}}};
+    #elseif {$gohome} {///;//;#delay 4 rest}
+}
+
+#alias check {
+    #if {!$grinding} {
+        look;
+        get gold;
+        clean;
+        farm $dir1 $dir2;
+    }
+}
+    

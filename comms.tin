@@ -1,0 +1,16 @@
+#alias ts {#log timestamp {%a %I:%M%P};#delay 1 {#log timestamp}}
+#action {%0 chats %1} {
+    #line log tt/comms.log {<129> %0<079> chats '%1'};
+}
+
+#action {Cosrin Event: %1 has gained a level}{
+    ts;#line log tt/comms.log {<169> Cosrin Event:<079> <139>%1<079> has gained a level}};
+#action {Cosrin Event: %1 has been killed by %0}{
+    ts;#line log tt/comms.log {<169> Cosrin Event:<079> <139>%1<079> has been killed by %0}};
+#action {Cosrin Comings and goings: %1 has Logged in}{
+    ts;#line log tt/comms.log {<169> Cosrin Comings and goings:<079> <139>%1<079> has Logged in}};
+#action {Cosrin Comings and goings: %1 has Logged out}{
+    ts;#line log tt/comms.log {<169> Cosrin Comings and goings:<079> <139>%1<079> has Logged out}};
+#action {^%0 guild shouts '%1'} {
+    ts;#line log tt/comms.log {<129>%0<079> guild shouts '%1'};
+}

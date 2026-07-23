@@ -1,0 +1,26 @@
+#if {"$charname" == "Micander"} {
+
+#VARIABLE weapon {light iron short sword};
+#VARIABLE offhand {iron buckler};
+#VARIABLE attack {charge} ;
+#READ /home/asderfasd/tt/comms.tin;
+
+}
+#if {"$charname" == "Kuziqudiq"} {
+
+#VARIABLE weapon {ruby bladed sword};
+#VARIABLE offhand {small shield};
+#VARIABLE attack {zap};
+}
+#if {"$charname" == "Doot"} {
+
+#VARIABLE weapon {ruby bladed sword};
+#VARIABLE offhand {smll shield};
+#VARIABLE attack {zap};
+}
+#if {"$charname" == "Vim"} {
+
+#VARIABLE weapon {ruby bladed sword};
+#VARIABLE offhand {small shield};
+#VARIABLE attack {zap};
+}

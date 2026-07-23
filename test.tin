@@ -1,0 +1,9 @@
+#action {You are not engaging a(n) creature} {#var killstuff 0};
+#alias wutwut {#if {$killstuff} {
+    #if {$needheal} {hh;#var needheal 0};
+    #elseif {$gohome} {#untick wut;recall};
+    #else {attack}; 
+}
+}
+
+#alias wut {#var killstuff 1;#tick wut wutwut $time};

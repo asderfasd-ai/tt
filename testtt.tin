@@ -1,0 +1,1 @@
+#action {     %0 ( %0) [%1:%2]} {#line log {tt/spelltest.log};#delay 10 {#sys {cat /dev/null > tt/spelltest.log}};#delay 20 {#log timestamp {%a %I:%M%P}}}

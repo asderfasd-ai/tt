@@ -1,0 +1,7 @@
+tmux new-session -s mud-spells '
+  tmux split-window -h "./multi_spell_countdown.sh";
+  tmux select-pane -t 0;
+  echo "Start your Tintin++ here";
+  bash
+'
+tmux attach -t mud-spells

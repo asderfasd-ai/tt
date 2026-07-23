@@ -1,0 +1,6 @@
+#split 1 1
+#read cos.tin
+#read comms.tin
+#read spells.tin
+
+#session cosrin play.cosrintwo.com 31000

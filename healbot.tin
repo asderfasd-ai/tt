@@ -1,0 +1,23 @@
+#ACTION {~\e[1;36;49m%1\e[0m\e[39;49m %0 from out of nowhere} {look %1;#var victim %1};
+#ACTION {~\e[1;36;49m%1\e[0m\e[39;49m %0 in from %0} {look %1;#var victim %1};
+#ACTION {%1 shoots its %2 at $charname} {engaged};
+#ACTION {~\e[1;31;49m%0\e[0m\e[39;49m %0 in!} {engaged};
+#ACTION {^%1 advances towards $charname} {engaged};
+#ALIAS healbot {cast $triage;#delay {$time} {target $victim;look $victim}};
+#ACTION {^Profession: %1 is a %3 %4 (%5)} {#if {"%5" != "in excellent health"} {#var triage regenerate;healbot} };
+#ACTION {^%1 is bleeding} {#var triage {body bind};healbot};
+#VARIABLE healmode 0
+
+#ALIAS {healmode} {#var healmode 1};
+
+#ALIAS engaged {
+
+    #if {$needheal} {hh;#delay {$time} {check};#var needheal 0} {dmg;#delay {$time} {look}};
+    #elseif {$gohome} {///;//;#delay 4 rest};
+
+}
+
+#ACTION {Monsters in Room:} {
+    #if {$healmode} {engaged} {#break};
+    
+}
